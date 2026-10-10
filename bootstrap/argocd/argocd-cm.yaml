@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+data:
+  # Poll git every minute instead of every 3 (production uses webhooks instead).
+  timeout.reconciliation: 60s
+  url: http://argocd.localtest.me

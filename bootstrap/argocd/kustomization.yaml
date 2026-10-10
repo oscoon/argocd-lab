@@ -1,0 +1,11 @@
+# Argo CD itself. Applied once by lab.sh, then Argo CD manages this folder
+# (apps/argocd.yaml): upgrading Argo CD is a pull request that changes the version below.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: argocd
+resources:
+  - https://raw.githubusercontent.com/argoproj/argo-cd/v3.4.10/manifests/install.yaml
+  - ingress.yaml
+patches:
+  - path: argocd-cmd-params-cm.yaml
+  - path: argocd-cm.yaml

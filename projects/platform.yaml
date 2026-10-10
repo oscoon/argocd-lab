@@ -1,0 +1,15 @@
+# Cluster-wide tooling: may deploy anything anywhere.
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: platform
+  namespace: argocd
+spec:
+  description: Cluster add-ons owned by the platform team
+  sourceRepos: ["*"]
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: "*"
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"

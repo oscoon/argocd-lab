@@ -1,0 +1,24 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../base
+images:
+  - name: ghcr.io/stefanprodan/podinfo
+    newTag: "6.14.1"
+replicas:
+  - name: shop
+    count: 1
+patches:
+  - target: { kind: ConfigMap, name: shop-config }
+    patch: |
+      - op: replace
+        path: /data/PODINFO_UI_MESSAGE
+        value: "Shop (dev)"
+      - op: replace
+        path: /data/PODINFO_UI_COLOR
+        value: "#2f7d5b"
+  - target: { kind: Ingress, name: shop }
+    patch: |
+      - op: replace
+        path: /spec/rules/0/host
+        value: shop-dev.localtest.me

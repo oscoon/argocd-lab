@@ -1,0 +1,43 @@
+# One Application per folder in shop/envs/ (dev, staging, prod, ...).
+# Non-production environments sync automatically; prod waits for a human.
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: shop
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - git:
+        repoURL: https://github.com/oscoon/argocd-lab.git
+        revision: main
+        directories:
+          - path: shop/envs/*
+  template:
+    metadata:
+      name: "shop-{{.path.basename}}"
+      labels:
+        team: shop
+        env: "{{.path.basename}}"
+    spec:
+      project: team-shop
+      source:
+        repoURL: https://github.com/oscoon/argocd-lab.git
+        targetRevision: main
+        path: "{{.path.path}}"
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: "shop-{{.path.basename}}"
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true
+      revisionHistoryLimit: 10
+  templatePatch: |
+    {{- if ne .path.basename "prod" }}
+    spec:
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+    {{- end }}

@@ -1,0 +1,22 @@
+# The shop team's guardrails: only this repo, only shop-* namespaces,
+# and no cluster-wide resources except creating its own namespaces.
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: team-shop
+  namespace: argocd
+spec:
+  description: The shop application, all environments
+  sourceRepos:
+    - https://github.com/oscoon/argocd-lab.git
+  destinations:
+    - server: https://kubernetes.default.svc
+      namespace: shop-*
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+  namespaceResourceBlacklist:
+    - group: ""
+      kind: ResourceQuota
+  orphanedResources:
+    warn: true

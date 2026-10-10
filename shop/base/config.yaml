@@ -1,0 +1,10 @@
+# Sync wave -1: created before the Deployment that reads it.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: shop-config
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+data:
+  PODINFO_UI_MESSAGE: "Hello from the shop"
+  PODINFO_UI_COLOR: "#34577c"

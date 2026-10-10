@@ -1,0 +1,7 @@
+# Traefik talks plain HTTP to Argo CD inside the cluster (no TLS in this lab).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cmd-params-cm
+data:
+  server.insecure: "true"

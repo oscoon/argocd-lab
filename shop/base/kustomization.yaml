@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - config.yaml
+  - deployment.yaml
+  - service.yaml
+  - ingress.yaml
+  - migrate-job.yaml
+  - smoke-test-job.yaml
+labels:
+  - pairs:
+      app.kubernetes.io/name: shop
+    includeSelectors: true

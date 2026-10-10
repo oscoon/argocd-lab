@@ -1,0 +1,18 @@
+# PreSync hook: runs before anything else in a sync. If it fails, the sync stops
+# and the running version stays untouched (lab 05 breaks it on purpose).
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: shop-migrate
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: migrate
+          image: busybox:1.36
+          command: ["sh", "-c", "echo 'migrating database schema...'; sleep 5; echo done"]

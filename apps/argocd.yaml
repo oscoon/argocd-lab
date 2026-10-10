@@ -1,0 +1,20 @@
+# Argo CD manages its own installation (bootstrap/argocd).
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd
+  namespace: argocd
+spec:
+  project: platform
+  source:
+    repoURL: https://github.com/oscoon/argocd-lab.git
+    targetRevision: main
+    path: bootstrap/argocd
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    # No prune: a mistake here should never delete Argo CD itself.
+    automated: { prune: false, selfHeal: true }
+    syncOptions:
+      - ServerSideApply=true
