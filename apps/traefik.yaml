@@ -23,6 +23,15 @@ spec:
           isDefaultClass: true
         deployment:
           replicas: 1
+        # Argo CD only calls an Ingress Healthy once its status has an address.
+        # Traefik normally copies that from its Service, but a NodePort Service
+        # has none on kind, so publish 127.0.0.1 (where port 80 lands) instead.
+        providers:
+          kubernetesIngress:
+            publishedService:
+              enabled: false
+            ingressEndpoint:
+              ip: 127.0.0.1
   destination:
     server: https://kubernetes.default.svc
     namespace: traefik
